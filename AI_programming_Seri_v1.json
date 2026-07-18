@@ -1,0 +1,1064 @@
+{
+  "name": "AI_programming_Seri_v1",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are the Chief Software Architect, Director, and Router. Your language is strictly English. Your single and only job is to act as a manager that analyzes the incoming request from Telegram and decides which specialized sub-agent to distribute the task to. \n\nDo NOT answer any coding, technical, or repository questions yourself. You must only assign the roles.\n\nYOU MUST ONLY REPLY IN A CLEAN JSON FORMAT. DO NOT ADD ANY MARKDOWN (LIKE ```json), DO NOT ADD ANY CONVERSATIONAL TEXT OUTSIDE THE JSON.\n\nOUTPUT FORMAT STANDARD:\n{\n  \"agent\": \"TARGET_AGENT_NAME\",\n  \"query\": \"THE_USER_ORIGINAL_REQUEST\"\n}\n\nSTRICT ROLE DISTRIBUTION RULES:\n1. frontend_agent BOUNDARY:\n   - Assign the task to \"frontend_agent\" ONLY if the user explicitly orders you to design, build, create, or generate a functional webpage, landing page, complete UI layout, or full HTML/CSS/Tailwind template code files.\n   - Example Triggers: \"design a dashboard page\", \"create a modern landing page theme\", \"build an HTML gallery\".\n\n2. question_agent BOUNDARY:\n   - Assign the task to \"question_agent\" for EVERYTHING else. \n   - General Programming Queries: If the user asks ANY programming, algorithmic, debugging, or technical conceptual questions in ANY language (e.g., \"What is the meaning of #include <iostream> in C++?\", \"Explain APIs\", \"Fix this JavaScript error\"). It goes here, NOT to the frontend agent.\n   - Account & GitHub Inquiries: If the user asks to check, list, summarize, or inspect live data regarding their primary GitHub account and repositories.\n   - Greetings & Casual Chat: If the user sends greetings, welcoming words, or casual pleasantries (e.g., \"Hi\", \"Hello\", \"Hallo seri\").\n\nSTRICTLY COMPLY WITH THE JSON OUTPUT STRUCTURE ONLY. NO EXPLANATIONS, NO TEXT OUTSIDE THE JSON BLOCK."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1392,
+        -864
+      ],
+      "id": "714ce019-7899-4cc2-9d2b-1a021d173208",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        -672
+      ],
+      "id": "fe0088c0-191f-4c16-b121-9aaa63aa1f7b",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -1360,
+        -576
+      ],
+      "id": "007c6c85-32a6-4e6e-9bb8-eed28c2f663b",
+      "name": "Simple Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        -16
+      ],
+      "id": "8cd8de3e-41c9-44ef-ac7c-01a83e71d45a",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are an Elite Senior Frontend Developer who creates jaw-dropping, elite, and vibrant web interfaces. You have a curated knowledge base of 50 premium template files (from one.html to fifty.html). Follow these rules with absolute strictness:\n\n1. CRITICAL RULES FOR REPLICATING EMBEDDED STYLES (THE RAG):\n- Before writing a single line of code, you MUST invoke the \"Answer questions with a vector store\" tool. \n- You are ordered to \"steal\" and mimic the high-end styles, dynamic configurations, and structures found in your RAG templates. Look at how those files (one.html to fifty.html) manage layout and typography, and copy that premium energy. Never write plain, generic, or boring code.\n\n2. CODE COMPLETENESS & MINIMUM LENGTH (120+ LINES REQUIREMENT):\n- The final HTML output MUST be fully descriptive, comprehensive, and detailed. \n- Your generated code MUST NEVER be less than 120 lines of code. Do not use shortcuts, placeholders, or comments like \"\". \n- Write complete, robust components, full semantic structures, extensive content sections, and detailed styling classes to ensure the script naturally expands past 120 lines.\n\n3. VIBRANCY, COLORS & MODERN UI DESIGN:\n- Your designs must be absolutely bursting with color and premium styling. Declare dynamic CSS Variables inside the <head> (<style>: --primary, --secondary, --accent-neon, --bg-gradient).\n- Use rich, trendy gradients (e.g., violet to neon cyan, deep space dark themes, radiant pastel tones).\n- Maximize UI depth: Implement modern box-shadows (shadow-2xl), rounded corners (rounded-2xl to rounded-3xl), and Glassmorphic cards (backdrop-blur-md with background opacity).\n- Always pull Google Fonts (like Poppins/Inter) and Lucide/FontAwesome Icons via CDN to make the iconography look stellar.\n\n4. INTERACTIONS & FRAMEWORKS:\n- Use Tailwind CSS via CDN for rapid, heavy, pixel-perfect layouts.\n- For interaction (dark mode toggles, dropdowns, navigation bars, interactive tabs), you MUST inject Alpine.js via CDN: <script defer src=\"https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js\"></script>\n- Use Alpine directives (x-data, x-show, @click) heavily inside your HTML to build smooth, fluid components.\n\n5. GITHUB UPLOAD & LIVE URL GENERATION:\n- When saving, push the entire code using the GitHub Create tool. Ensure a valid file name ending in .html.\n- At the very end of your response, output the direct clickable live preview link formatted EXACTLY like this:\nhttps://znassar532-collab.github.io/Front-end_desgin/[FILE_NAME]\n\nAlways reply in Arabic or English only. Never use German."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -656,
+        -240
+      ],
+      "id": "e2f763c5-bf39-41d8-b042-a8bd02274579",
+      "name": "Agent FrontEnd"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -624,
+        32
+      ],
+      "id": "020c4679-5bae-42c2-88e3-f5d4e1b88675",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to search Google for the latest Tailwind CSS components, modern UI/UX design trends, color palettes, or frontend framework documentation.",
+        "q": "={{ $json.action_input || \"modern tailwind components\" }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        16
+      ],
+      "id": "90be4bc0-3bf0-4794-99aa-9f8b46385dd0",
+      "name": "Google search in SerpApi",
+      "credentials": {
+        "serpApi": {
+          "id": "HafCR0mRQc6z0wD6",
+          "name": "SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "znassar532-collab",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "Front-end_desgin",
+          "mode": "name"
+        },
+        "filePath": "={{ (() => {   const inputTest = $json.action_input || \"\";   const fileRegex = /([a-zA-O0-9_-]+\\.(html|css|js))/i;   const match = inputTest.match(fileRegex);   return match ? match[1] : \"index.html\"; })() }}",
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        -16
+      ],
+      "id": "3d2de57a-ce02-41b3-bb03-688ccce65780",
+      "name": "Read Files",
+      "webhookId": "f10130d5-dc34-4362-9b3d-a038f742e2f3",
+      "credentials": {
+        "githubApi": {
+          "id": "tVyCRt8XB3TfvsyA",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "znassar532-collab",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "Front-end_desgin",
+          "mode": "name"
+        },
+        "filePath": "={{ (() => {\n  const inputTest = $json.action_input || \"\";\n  \n  const fileRegex = /([a-zA-O0-9_-]+\\.(html|css|js))/i;\n  const match = inputTest.match(fileRegex);\n  \n  return match ? match[1] : \"page_\" + Math.floor(Date.now() / 1000) + \".html\";\n})() }}",
+        "fileContent": "={{ $json.action_input || \"\" }}",
+        "commitMessage": "={{ $json.action_input || \"\" }}"
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        -32
+      ],
+      "id": "4ae3fa09-ff33-4f9e-ba5e-85d394950f70",
+      "name": "Create Files",
+      "webhookId": "6241997e-1a4b-46af-bb74-4646c34130c6",
+      "credentials": {
+        "githubApi": {
+          "id": "tVyCRt8XB3TfvsyA",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "delete",
+        "owner": {
+          "__rl": true,
+          "value": "znassar532-collab",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "Front-end_desgin",
+          "mode": "name"
+        },
+        "filePath": "={{ (() => {   const inputTest = $json.action_input || \"\";   const fileRegex = /([a-zA-O0-9_-]+\\.(html|css|js))/i;   const match = inputTest.match(fileRegex);   return match ? match[1] : \"index.html\"; })() }}",
+        "commitMessage": "I wanna delet this file "
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        48,
+        -80
+      ],
+      "id": "af16a069-67e5-4dd3-8a6a-965fa7c15299",
+      "name": "Delete a file in GitHub",
+      "webhookId": "c7768b62-2cd2-482d-ad3d-e9cc3ed0f72c",
+      "credentials": {
+        "githubApi": {
+          "id": "tVyCRt8XB3TfvsyA",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "##  fron end \n",
+        "height": 1248,
+        "width": 2544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        -352
+      ],
+      "id": "d7537539-690c-4f4e-9eb5-c82eb2789a75",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Rag\n",
+        "height": 656,
+        "width": 1264,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -272
+      ],
+      "id": "988d13b4-a80b-46fe-9a5b-2cbad7b1c401",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1VAt51KuJWCHak__BQktMUEt13wE5uMNT",
+          "mode": "list",
+          "cachedResultName": "Programming_front_end",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1VAt51KuJWCHak__BQktMUEt13wE5uMNT"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -176
+      ],
+      "id": "4869a31f-a09a-414b-93f2-90359a99acaa",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "oPTbVU5f72G07HH8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        576,
+        -176
+      ],
+      "id": "2edcd0a3-d637-462d-8544-ad198fe26d06",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "oPTbVU5f72G07HH8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        192
+      ],
+      "id": "5236c7b8-35b3-4e58-b9e5-b473088fd865",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        304,
+        128
+      ],
+      "id": "a031c607-905f-4421-87a3-1c7b35e86ad4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 60,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1VAt51KuJWCHak__BQktMUEt13wE5uMNT",
+            "mode": "list",
+            "cachedResultName": "Programming_front_end",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1VAt51KuJWCHak__BQktMUEt13wE5uMNT"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        512,
+        128
+      ],
+      "id": "5e7d25ab-05c1-4e74-a863-7b4ad186cfae",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "oPTbVU5f72G07HH8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        720,
+        128
+      ],
+      "id": "83303ad8-c80b-4999-8325-6b07ad0b2620",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "oPTbVU5f72G07HH8",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "You are a code retrieval assistant. Your job is to find the most relevant HTML structure or style from the 50 ordered template files (`one.html` to `fifty.html`) that matches the user's query. Return the raw HTML/Tailwind snippets and style classes accurately so the Frontend Agent can build upon them."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        -336,
+        304
+      ],
+      "id": "73f1aec1-666c-4960-adf0-fc4664222c3b",
+      "name": "Answer questions with a vector store"
+    },
+    {
+      "parameters": {
+        "content": "# Rag\n",
+        "height": 576,
+        "width": 800,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        224
+      ],
+      "id": "eee3b4cb-ed8f-4a50-ab44-16f489cdca6f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        -576,
+        464
+      ],
+      "id": "2082ba39-4bfe-4559-bcf5-ab7900982fcd",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "model": "nomic-embed-text:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        640
+      ],
+      "id": "ae41fe89-0313-4c70-842d-9bacbe597691",
+      "name": "Embeddings Ollama1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        576
+      ],
+      "id": "245dfeaa-3e91-4cc3-a62b-36e56a762ab5",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "frontendragv1",
+          "mode": "list",
+          "cachedResultName": "frontendragv1"
+        },
+        "embeddingBatchSize": 5,
+        "options": {
+          "pineconeNamespace": "Frot_end_system"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1168,
+        -192
+      ],
+      "id": "fcb4db19-c54e-45b3-b28c-df86a55903fb",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "yxPc3qMkMvaUrijp",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst output = [];\n\nfor (let i = 0; i < items.length; i++) {\n    const item = items[i];\n    \n    if (item.binary && item.binary.data) {\n        // قراءة محتوى الـ HTML وتحويله من base64 إلى نص عادي\n        const htmlContent = Buffer.from(item.binary.data.data, 'base64').toString('utf-8');\n        const fileName = item.binary.data.fileName || `file_${i}.html`;\n\n        // هنا بنبني الهيكل اللي الـ Pinecone Insert Documents مستنيه بالظبط\n        output.push({\n            json: {\n                // النص الصافي اللي هيتفرس ويتعمله Embedding\n                pageContent: htmlContent,\n                // بيانات إضافية للملف عشان الإيجنت يعرف اسم الصفحة وهو بيبحث\n                metadata: {\n                    file_name: fileName,\n                    source: \"Google Drive\"\n                }\n            }\n        });\n    }\n}\n\nreturn output;s;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        -208
+      ],
+      "id": "745d9ab6-c758-4981-8e89-d6a582ed29d3",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "FronfEnd_Rag"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1312,
+        16
+      ],
+      "id": "40362f9a-4bf5-46bc-8c43-12b6dc7cdc49",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst output = [];\n\nfor (let i = 0; i < items.length; i++) {\n    const item = items[i];\n    \n    if (item.binary && item.binary.data) {\n        // قراءة محتوى الـ HTML وتحويله من base64 إلى نص عادي\n        const htmlContent = Buffer.from(item.binary.data.data, 'base64').toString('utf-8');\n        const fileName = item.binary.data.fileName || `file_${i}.html`;\n\n        // هنا بنبني الهيكل اللي الـ Pinecone Insert Documents مستنيه بالظبط\n        output.push({\n            json: {\n                // النص الصافي اللي هيتفرس ويتعمله Embedding\n                pageContent: htmlContent,\n                // بيانات إضافية للملف عشان الإيجنت يعرف اسم الصفحة وهو بيبحث\n                metadata: {\n                    file_name: fileName,\n                    source: \"Google Drive\"\n                }\n            }\n        });\n    }\n}\n\nreturn output;s;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        0
+      ],
+      "id": "96f5cb5f-fdfe-44c0-a347-82c7b3c80736",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "content": "# Main Agent ",
+        "height": 576,
+        "width": 1072,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1824,
+        -960
+      ],
+      "id": "f85667cf-062c-4173-bab6-90ead14ed4a5",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:3b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -2528,
+        80
+      ],
+      "id": "1458e8bb-3ee6-4896-aa6c-8e15529ca1de",
+      "name": "Ollama Chat Model2",
+      "credentials": {
+        "ollamaApi": {
+          "id": "gjFRQLOqRu6k3Fz8",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Question Tool ",
+        "height": 624,
+        "width": 832,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2640,
+        -288
+      ],
+      "id": "d3806da4-48c8-4994-9734-3271835f5b9f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        -2304,
+        64
+      ],
+      "id": "a3279731-dc22-42da-925f-5a865f788b92",
+      "name": "Google search in SerpApi1",
+      "credentials": {
+        "serpApi": {
+          "id": "HafCR0mRQc6z0wD6",
+          "name": "SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "repository",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "ziadnasar6-lgtm",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $fromAI('Repository_Name', ``, 'string') }}",
+          "mode": "url",
+          "__regex": "https:\\/\\/(?:[^/]+)\\/(?:[-_0-9a-zA-Z]+)\\/([-_.0-9a-zA-Z]+)"
+        }
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        -2128,
+        48
+      ],
+      "id": "f6c6fe20-62d8-448b-92a4-d5cd86f14332",
+      "name": "Get a repository in GitHub",
+      "webhookId": "1c740bd9-bace-4743-b62f-2c6d2d634c3f",
+      "credentials": {
+        "githubApi": {
+          "id": "7QOALTi8nrmN7xEa",
+          "name": "GitHub account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are an Elite Senior Software Engineer and a dedicated GitHub Repository Administrator. Your core mission is to act as a brilliant programming mentor and a direct assistant for the user's GitHub account.\n\nFollow these strict operational guidelines:\n\n1. MASTER PROGRAMMER & SIMPLIFIER:\n- You possess deep knowledge of Full-Stack development, systems programming, and API architectures.\n- When asked any programming or technical question, you must break down complex topics into highly digestible, clear, and simple concepts. \n- Use real-world analogies, clean and well-commented code snippets, and structured bullet points. Never reply with dense, overly academic walls of text. Be the helpful peer who explains things perfectly.\n\n2. GITHUB ACCOUNT EXPERT & MANAGER:\n- You have direct access to the user's primary GitHub account via your connected tools.\n- Your job is to answer any question regarding the user's GitHub repositories, commits, issues, branches, pull requests, or project structures.\n- Whenever the user asks about their projects (e.g., \"What repos do I have?\", \"Check the latest commits\", \"Summarize this repository\"), you must proactively use the GitHub tools to fetch the live data, analyze it, and provide an accurate, up-to-date summary.\n\n3. RESPONSE STYLE & TONE:\n- Be encouraging, concise, and highly professional yet friendly.\n- Always respond in the exact same language the user uses (Arabic or English). \n- If a technical question requires external live data or documentation updates beyond your training, remember you can coordinate with your search tool."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        -2384,
+        -192
+      ],
+      "id": "8028516c-6b32-431e-84a5-d16d5f35bcff",
+      "name": "Question agent"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1664,
+        -832
+      ],
+      "id": "d92cde42-0feb-4190-95c3-577017b8cf13",
+      "name": "Telegram Trigger",
+      "webhookId": "4506b5a6-aba7-4e7b-82df-825426436c7f",
+      "credentials": {
+        "telegramApi": {
+          "id": "XZzh5d6Hi2DJT3MK",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -992,
+        -784
+      ],
+      "id": "1e736a5c-9889-4de7-aa2a-795249f85dcb",
+      "name": "Send a text message",
+      "webhookId": "13fbf9d4-5d64-4c38-9c2f-e8ec327f8e2e",
+      "credentials": {
+        "telegramApi": {
+          "id": "XZzh5d6Hi2DJT3MK",
+          "name": "Telegram account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent FrontEnd",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent FrontEnd": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent FrontEnd",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google search in SerpApi": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent FrontEnd",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Files": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent FrontEnd",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Files": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent FrontEnd",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a file in GitHub": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent FrontEnd",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent FrontEnd",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google search in SerpApi1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Question agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a repository in GitHub": {
+      "ai_tool": [
+        [
+          {
+            "node": "Question agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "da73f8e7-5deb-425b-941f-ed9cb1711037",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1683654809315c19d0a840f8124382572658b780e6471abee7e4b55976cd39e6"
+  },
+  "nodeGroups": [],
+  "id": "xlNTJjhEGC8onJcy",
+  "tags": []
+}
